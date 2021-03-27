@@ -1,5 +1,5 @@
 class BooksController < ApplicationController
-  before_action :find_book, only: [:show, :edit, :update]
+  before_action :find_book, only: [:show, :edit, :update, :destroy]
 
   def index
     @limit = params[:limit].present? ? params[:limit].to_i : 10
@@ -19,6 +19,23 @@ class BooksController < ApplicationController
   def show
   end
 
+  def new
+    @book = Book.new
+  end
+
+  def create
+    @book = Book.new(permitted_params)
+
+    respond_to do |format|
+      if @book.save
+        format.turbo_stream
+        format.html { redirect_to books_url(@book) }
+      else
+        format.html { render :new, status: :unprocessable_entity }
+      end
+    end
+  end
+
   def edit
   end
 
@@ -26,6 +43,15 @@ class BooksController < ApplicationController
     @book.update!(permitted_params.slice(:title, :author, :publisher, :genre))
 
     redirect_to book_url(@book)
+  end
+
+  def destroy
+    @book.destroy
+
+    respond_to do |format|
+      format.turbo_stream
+      format.html
+    end
   end
 
   private

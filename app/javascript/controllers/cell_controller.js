@@ -22,8 +22,18 @@ export default class extends Controller {
     handleEditKeys(event) {
         if(event.keyCode === 27) { // do not submit changes if escape key is pressed
             this.cancelEditTarget.click();
-        } else if (event.keyCode === 13) { //submit changes if enter is pressed
-            this.submitEdit(event);
+        }
+    }
+
+    displayDestroyLink(event) {
+        const link = event.currentTarget.querySelector('.delete-link')
+        link.classList.remove('hidden')
+    }
+
+    hideDestroyLink(event) {
+        const link = event.currentTarget.querySelector('.delete-link')
+        if (!link.classList.contains('hidden')) {
+            link.classList.add('hidden')
         }
     }
 }
